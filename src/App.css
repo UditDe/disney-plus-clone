@@ -1,0 +1,4 @@
+* {
+	box-sizing: border-box;
+	/* by doning "border-box" this the width containes the border */
+}
