@@ -2,8 +2,10 @@ import React from "react";
 import "./App.css";
 import Header from "./components/header";
 import Home from "./components/home";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Detail from "./components/detail";
+import Login from "./components/login";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+
 
 function App() {
 	return (
@@ -11,6 +13,7 @@ function App() {
 			<Router>
 				<Header />
 				<Routes>
+					<Route path="/login" element={<Login />} />
 					<Route path="/" element={<Home />} />
 					<Route path="/detail" element={<Detail />} />
 				</Routes>
