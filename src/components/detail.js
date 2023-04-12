@@ -1,49 +1,81 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
+import db from "../firebase";
 
 function Detail() {
+	const { id } = useParams();
+	console.log("id is ", id);
+
+	const [movie, setMovie] = useState();
+
+	useEffect(() => {
+		//grab the movie info from db
+		db
+			.collection("movies")
+			.doc(id)
+			.get()
+			.then((doc) => {
+				if (doc.exists) {
+					//save the movie data
+					setMovie(doc.data());
+				} else {
+					//redirect to homepage
+				}
+			});
+	}, []);
+
+	console.log("movie is ", movie);
+
 	return (
 		<Container>
-			<Background>
-				<img
-					src="https://img1.hotstarext.com/image/upload/f_auto/sources/r1/cms/prod/9807/1379807-i-5512ca21dd11"
-					alt=""
-				/>
-			</Background>
-			<ImageTitle>
-				<img
-					src="https://img1.hotstarext.com/image/upload/f_auto,h_136/sources/r1/cms/prod/9809/1379809-t-11722dd2ca3a"
-					alt=""
-				/>
-			</ImageTitle>
+			{movie && (
+				<>
+					<Background>
+						<img
+							src={`${
+								movie
+									? movie.backgroundImg
+									: "	https://img1.hotstarext.com/image/upload/f_auto/sources/r1/cms/prod/9733/1379733-i-4a16919c368f"
+							}`}
+							alt=""
+						/>
+					</Background>
+					<ImageTitle>
+						<img
+							src={`${
+								movie
+									? movie.titleImg
+									: "https://img1.hotstarext.com/image/upload/f_auto,h_136/sources/r1/cms/prod/9735/1379735-t-1d5398d017f8"
+							}`}
+							alt=""
+						/>
+					</ImageTitle>
 
-			<Controls>
-				<PlayButton>
-					<img src="/images/play-icon-black.png" alt="" />
-					<span>PLAY</span>
-				</PlayButton>
-				<TrailerButon>
-					<img src="/images/play-icon-white.png" alt="" />
-					<span>trailer</span>
-				</TrailerButon>
-				<AddButton>
-					<span>+</span>
-				</AddButton>
-				<GroupWatchButton>
-					<img src="/images/group-icon.png" alt="" />
-				</GroupWatchButton>
-			</Controls>
-			<Subtitle>This is Subtitle</Subtitle>
-			<Description>
-				Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-				Lorem Ipsum has been the industry's standard dummy text ever since the
-				1500s, when an unknown printer took a galley of type and scrambled it to
-				make a type specimen book. It has survived not only five centuries, but also
-				the leap into electronic typesetting, remaining essentially unchanged. It
-				was popularised in the 1960s with the release of Letraset sheets containing
-				Lorem Ipsum passages, and more recently with desktop publishing software
-				like Aldus PageMaker including versions of Lorem Ipsum.
-			</Description>
+					<Controls>
+						<PlayButton>
+							<img src="/images/play-icon-black.png" alt="" />
+							<span>PLAY</span>
+						</PlayButton>
+						<TrailerButon>
+							<img src="/images/play-icon-white.png" alt="" />
+							<span>trailer</span>
+						</TrailerButon>
+						<AddButton>
+							<span>+</span>
+						</AddButton>
+						<GroupWatchButton>
+							<img src="/images/group-icon.png" alt="" />
+						</GroupWatchButton>
+					</Controls>
+					<Subtitle>{movie ? movie.subtitle : "This is subtitle"}</Subtitle>
+					<Description>
+						{movie
+							? movie.description
+							: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}
+					</Description>
+				</>
+			)}
 		</Container>
 	);
 }
